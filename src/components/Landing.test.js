@@ -1,6 +1,7 @@
-import React from "react";
-import Landing from "./Landing";
-import {shallow} from "enzyme";
+import React from "react"
+import Landing from "./Landing"
+import {shallow} from "enzyme"
+import axios from 'axios'
 
 let component
 
@@ -20,10 +21,15 @@ describe('basic component layout and functionality', () => {
 })
 
 describe('login functionality', () => {
+    const fakePromise = jest.fn(() => Promise.resolve({data: 'BANANA'}));
 
     it('should provide a username and password input box', () => {
         expect(component.find('[data-username-field]').exists()).toBeTruthy()
         expect(component.find('[data-password-field]').exists()).toBeTruthy()
+    })
+
+    beforeEach(() => {
+        axios.post = fakePromise
     })
 
     it('should log the user in when they submit their credentials', () => {
@@ -31,7 +37,18 @@ describe('login functionality', () => {
         component.find('[data-password-field]').simulate('change', {target: {value: 'SECRET PASSWORD'}})
 
         component.find('[data-login-submit]').simulate('click')
-        
-        expect(component.find('[data-user-details]').text()).toEqual('Welcome Alex Hall, last logged in 01-01-1900')
+
+        expect(fakePromise).toBeCalledWith(
+            'http://bananaville.biz/login',
+            {
+                username: 'alex-hall',
+                password: 'SECRET PASSWORD'
+            }
+        )
+
+        return fakePromise()
+            .then((data) => {
+                expect(component.find('[data-user-details]').text()).toEqual('Welcome Alex Hall, last logged in 01-01-1900')
+            })
     })
 })
