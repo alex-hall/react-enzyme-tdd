@@ -4,15 +4,17 @@ import {shallow} from "enzyme";
 
 
 describe('basic functionality', () => {
-    it('shouldnt explode', () => {
-        const component = shallow(<Landing/>)
+    let component
+    
+    beforeEach(() => {
+        component = shallow(<Landing/>)
+    })
 
+    it('shouldnt explode', () => {
         expect(component.exists()).toEqual(true)
     })
 
     it('should display a welcome message', () => {
-        const component = shallow(<Landing/>)
-
         expect(component.find('h1').text()).toEqual('Welcome to the landing page!')
     })
 
