@@ -9,6 +9,7 @@ export default class Landing extends Component {
         return (
             <div>
                 <h1>Welcome to the landing page!</h1>
+                <div data-user-details></div>
 
                 <form>
                     <input type="text" data-username-field/>
@@ -16,6 +17,8 @@ export default class Landing extends Component {
 
                     <button data-login-submit type="submit">Submit!</button>
                 </form>
+
+
 
             </div>
         )
