@@ -13,33 +13,26 @@ export default class Landing extends Component {
         }
     }
 
-    handleUsernameChange = ({target: {value}}) => {
+    handleFieldChange = (element, {target: {value}}) => {
         this.setState({
-            username: value
+            [element]: value
         })
     }
 
-    handlePasswordChange = ({target: {value}}) => {
-        this.setState({
-            password: value
-        })
-    }
-
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault()
 
         const {username, password} = this.state
 
-        axios
+        const {data} = await axios
             .post('http://bananaville.biz/login', {
                 username,
                 password
             })
-            .then(response => {
-                this.setState({
-                    userData: response.data
-                })
-            })
+
+        this.setState({
+            userData: data
+        })
     }
 
     render() {
@@ -53,8 +46,12 @@ export default class Landing extends Component {
                 </div>
 
                 <form onSubmit={this.handleSubmit}>
-                    <input type="text" onChange={this.handleUsernameChange} data-username-field/>
-                    <input type="password" onChange={this.handlePasswordChange} data-password-field/>
+                    <input type="text"
+                           onChange={(event) => this.handleFieldChange('username', event)}
+                           data-username-field/>
+                    <input type="password"
+                           onChange={(event) => this.handleFieldChange('password', event)}
+                           data-password-field/>
 
                     <button data-login-submit type="submit">Submit!</button>
                 </form>
