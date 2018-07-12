@@ -9,6 +9,9 @@ export default class Landing extends Component{
         return (
             <div>
                 <h1>Welcome to the landing page!</h1>
+
+                <input type="text" data-username-field/>
+                <input type="password" data-password-field/>
             </div>
         )
     }
