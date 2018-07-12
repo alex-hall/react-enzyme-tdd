@@ -21,7 +21,15 @@ describe('basic component layout and functionality', () => {
 })
 
 describe('login functionality', () => {
-    const fakePromise = jest.fn(() => Promise.resolve({data: 'BANANA'}));
+    const fakePromise = jest.fn(() => {
+        return Promise.resolve({
+            data: {
+                fullName: 'Alex Hall',
+                location: 'Atlanta, GA',
+                lastLoggedIn: '01-01-1900'
+            }
+        })
+    });
 
     it('should provide a username and password input box', () => {
         expect(component.find('[data-username-field]').exists()).toBeTruthy()
@@ -36,7 +44,10 @@ describe('login functionality', () => {
         component.find('[data-username-field]').simulate('change', {target: {value: "alex-hall"}})
         component.find('[data-password-field]').simulate('change', {target: {value: 'SECRET PASSWORD'}})
 
-        component.find('[data-login-submit]').simulate('click')
+        component.find('form').simulate('submit', {
+            preventDefault: () => {
+            }
+        })
 
         expect(fakePromise).toBeCalledWith(
             'http://bananaville.biz/login',
@@ -47,8 +58,9 @@ describe('login functionality', () => {
         )
 
         return fakePromise()
-            .then((data) => {
-                expect(component.find('[data-user-details]').text()).toEqual('Welcome Alex Hall, last logged in 01-01-1900')
+            .then(_ => {
+                component.update()
+                expect(component.find('[data-user-details]').text()).toEqual('Welcome Alex Hall, last logged in: 01-01-1900')
             })
     })
 })
